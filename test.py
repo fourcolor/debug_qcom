@@ -5,8 +5,9 @@ from utility import HdlcMixin
 import traceback
 import time
 from time import sleep
-def task_port(port, out):
-    ser = serial.Serial('/dev/serial/by-id/usb-SAMSUNG_SAMSUNG_Android_R5CRA1ESYWM-if00-port0',baudrate=9600,
+def task_port(port, fout):
+    out = open(fout,'w')
+    ser = serial.Serial(port,baudrate=9600,
                         timeout=None, rtscts=True, dsrdtr=True)
     startcmds = [
     # b's\x00\x00\x00\x00\x00\x00\x00\xda\x81~'
@@ -148,3 +149,12 @@ def task_port(port, out):
             #     ser.write(i)
             ser.close()
             
+from multiprocessing import Pool
+if __name__ == '__main__':
+    # 建立參數列表，每個元組代表一組函數參數
+    params = [(1, 2), (3, 4), (5, 6), (7, 8)]
+
+    # 建立進程池，指定同時進行的進程數量
+    with Pool(processes=4) as pool:
+        # 使用 starmap 方法，同時執行 my_function，傳入多組參數
+        results = pool.starmap(task_port, params)
